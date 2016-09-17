@@ -39,7 +39,7 @@ var routes = Routes{
 		"Root",
 		"GET",
 		"/",
-		Root,
+		LinkIndex,
 	},
 	Route{
 		"LinkIndex",

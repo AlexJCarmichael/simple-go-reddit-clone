@@ -2,8 +2,10 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
-	"net/http"
+ 	"net/http"
+
+  "github.com/jinzhu/gorm"
+  _ "github.com/jinzhu/gorm/dialects/postgres"
 
 	"github.com/gorilla/mux"
 )
@@ -21,8 +23,14 @@ func LinkIndex(w http.ResponseWriter, r *http.Request) {
 }
 
 func LinkShow(w http.ResponseWriter, r *http.Request) {
+  db, _ := gorm.Open("postgres", "host=localhost dbname=go-api-db")
 	params := mux.Vars(r)
 	linkId := params["linkId"]
   w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, "Link show:", linkId)
+  var link Link
+  show := db.First(&link, linkId)
+	if err := json.NewEncoder(w).Encode(show); err != nil {
+    panic(err)
+  }
+  defer db.Close()
 }
